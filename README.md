@@ -66,6 +66,22 @@ těsně nad Menu.
 Push do `main` → GitHub Action (`.github/workflows/deploy.yml`) postaví `dist`
 a nasadí na GitHub Pages. Custom doména je v `public/CNAME`.
 
+Repo: `pavpav2/sunset-dinner` · první nasazení: `./scripts/deploy-setup.sh`
+(předtím `gh auth login`).
+
+### DNS
+
+Autoritativní zóna pro `strecharadost.cz` je na Wixu (`ns14/ns15.wixdns.net`),
+takže záznam musí vzniknout tam — Wix → Domény → strecharadost.cz → Spravovat DNS:
+
+| Typ | Host | Hodnota | TTL |
+|---|---|---|---|
+| CNAME | `dinner` | `pavpav2.github.io` | 1 h |
+
+Po propsání: Settings → Pages → Custom domain `dinner.strecharadost.cz`
++ Enforce HTTPS. A záznam na IP GitHubu tu nepoužíváme — ty jsou dokumentované
+jen pro apex doménu, na subdoméně přežije CNAME i změnu IP.
+
 ## Výkon
 
 Měřeno na profilu Lighthouse mobile (pomalá 4G 1,6 Mbps / 150 ms RTT, 4× brzda CPU),
