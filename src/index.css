@@ -227,7 +227,10 @@ main section h2{font-size:clamp(2.2rem,5vw,3.6rem); line-height:.95; margin-bott
 
 /* ---------- Noc ---------- */
 .s-night{text-align:center; padding-bottom:2rem}
-.s-night h2{font-size:clamp(2.4rem,6vw,4rem)}
+/* Kroužek nad Ů v „ZŮSTAŇTE“ sahá výš než verzálky a při těsném prokladu
+   naráží do řádku nad sebou. Tenhle nadpis je největší na stránce, takže
+   potřebuje víc místa než ostatní sekce. */
+.s-night h2{font-size:clamp(2.4rem,6vw,4rem); line-height:1.12}
 .s-night .lead{margin:0 auto; max-width:40ch}
 .night-band{width:100%; height:auto; margin-top:4rem}
 
