@@ -26,14 +26,20 @@ fi
 echo
 echo "Build běží v Actions. Sleduj:  gh run watch"
 echo
-echo "── Až doběhne ───────────────────────────────────────────────"
-echo "  Kontrolní URL:   https://$USER.github.io/$REPO/"
-echo "  (dokud nesedí DNS; po jeho propsání pojede $DOMAIN)"
-echo
-echo "── DNS záznam do Wixu ───────────────────────────────────────"
+echo "── DNS záznam (zóna je na Wixu: ns14/ns15.wixdns.net) ───────"
 echo "  Typ:     CNAME"
 echo "  Host:    ${DOMAIN%%.*}"
 echo "  Hodnota: $USER.github.io"
 echo "  TTL:     1 hodina"
 echo
-echo "Po propsání DNS: Settings → Pages → Custom domain = $DOMAIN, Enforce HTTPS."
+echo "── Kontrolní URL ────────────────────────────────────────────"
+echo "  https://$DOMAIN"
+echo
+echo "  Pozor: https://$USER.github.io/$REPO/ NEfunguje — kvůli souboru"
+echo "  public/CNAME nastaví Pages custom doménu a github.io adresu na ni"
+echo "  přesměruje. Do propsání DNS kontroluj lokálně přes 'npm run preview'."
+echo
+echo "Po propsání DNS: Settings → Pages → ověřit Custom domain = $DOMAIN"
+echo "a zaškrtnout Enforce HTTPS."
+echo
+printf "Stav DNS zkontroluješ:  dig +short %s\n" "$DOMAIN"
