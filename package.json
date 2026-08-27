@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "assets": "node scripts/optimize-assets.mjs"
+    "assets": "node scripts/optimize-assets.mjs",
+    "skyline": "node scripts/skyline.mjs"
   },
   "dependencies": {
     "@studio-freight/lenis": "^1.0.42",
