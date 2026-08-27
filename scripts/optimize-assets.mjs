@@ -2,7 +2,7 @@
  * Příprava obrázků pro public/ ze zdrojů v _source/.
  * Spouští se přes `npm run assets` a taky automaticky před buildem.
  *
- *  _source/layer-sky.jpg    → public/parallax-assets/layer-sky{,-1200}.jpg  (srcset pro hero)
+ *  _source/layer-sky.jpg    → public/parallax-assets/layer-sky{,-1200,-2400}.jpg (srcset)
  *  _source/layer-sky.jpg    → public/parallax-assets/skyline.svg          (silueta horizontu, viz skyline.mjs)
  *  _source/vyhled-zapad.jpg → public/vyhled-zapad.jpg                (zmenšeno na 1100 px)
  *  _source/photos/*.jpg     → public/fotky/*.jpg                     (fotky partnerů)
@@ -25,18 +25,24 @@ const report = async (label, file) => console.log(`  ${label.padEnd(34)} ${await
 
 await mkdir(out('parallax-assets'), { recursive: true });
 
-// --- Vrstvy heru ve dvou šířkách ----------------------------------------
+// --- Vrstva nebe ve třech šířkách ---------------------------------------
 // Hero je LCP prvek. Fotka je na výšku a object-fit:cover ji na telefonu
-// škáluje podle výšky, takže 390px displej při DPR2 potřebuje ~1200 px šířky —
-// proto 1200w a 1600w, srcset si vybere. Menší varianta by se rozmazala.
-for (const w of [1200, 1600]) {
+// škáluje podle výšky, takže 390px displej při DPR2 potřebuje ~1200 px šířky.
+// Zdroj má 1600 px, jenže Retina notebook chce přes 3000 — 2400w variantu
+// proto zvětšujeme. Detail nepřibude, ale lanczos + jemný unsharp vypadá
+// znatelně ostřeji než dotažení, které si udělá prohlížeč sám, a Retina by
+// stejně sáhla po té 1600px, takže je to +31 kB, ne +288.
+// EDIT: až bude k dispozici originál fotky ve vyšším rozlišení, nahradit
+//       _source/layer-sky.jpg — tohle zvětšování pak odpadne.
+for (const w of [1200, 1600, 2400]) {
   const suffix = w === 1600 ? '' : `-${w}`;
+  const up = w > 1600;
   await sharp(src('layer-sky.jpg'))
-    .resize({ width: w, withoutEnlargement: true })
-    .jpeg({ quality: 82, progressive: true, mozjpeg: true, chromaSubsampling: '4:4:4' })
+    .resize({ width: w, withoutEnlargement: !up, kernel: 'lanczos3' })
+    .sharpen(up ? { sigma: 0.8, m1: 0.5, m2: 0.5 } : { sigma: 0.4, m1: 0, m2: 0 })
+    .jpeg({ quality: up ? 76 : 82, progressive: true, mozjpeg: true, chromaSubsampling: '4:4:4' })
     .toFile(out(`parallax-assets/layer-sky${suffix}.jpg`));
   await report(`parallax-assets/layer-sky${suffix}.jpg`, out(`parallax-assets/layer-sky${suffix}.jpg`));
-
 }
 
 // --- Fotka do sekce Místo -----------------------------------------------

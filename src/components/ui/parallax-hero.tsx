@@ -70,7 +70,7 @@ export function ParallaxHero() {
             {/* Vrstva 1 — nebe (celá fotka) */}
             <img
               src="/parallax-assets/layer-sky.jpg"
-              srcSet="/parallax-assets/layer-sky-1200.jpg 1200w, /parallax-assets/layer-sky.jpg 1600w"
+              srcSet="/parallax-assets/layer-sky-1200.jpg 1200w, /parallax-assets/layer-sky.jpg 1600w, /parallax-assets/layer-sky-2400.jpg 2400w"
               sizes="100vw"
               loading="eager"
               fetchPriority="high"

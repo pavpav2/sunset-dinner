@@ -25,3 +25,5 @@ dist-ssr
 
 # generováno Vitem
 *.tsbuildinfo
+
+# licencované fonty — originály od klienta, do public/ se kopírují jen použité řezy

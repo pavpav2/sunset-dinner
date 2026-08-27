@@ -25,7 +25,10 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;600;700;800&display=swap&subset=latin-ext" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap&subset=latin-ext" rel="stylesheet" />
+
+    <!-- Radial Grotesk je self-hosted; Semi nese běžný text, tak ho načíst hned -->
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/RadialGrotesk-Semi.woff2" crossorigin />
 
     <!-- LCP: nebe v heru načíst co nejdřív. imagesrcset musí sedět se srcset
          v parallax-hero.tsx, jinak by se stáhly obě varianty. -->
@@ -33,7 +36,7 @@
       rel="preload"
       as="image"
       href="/parallax-assets/layer-sky.jpg"
-      imagesrcset="/parallax-assets/layer-sky-1200.jpg 1200w, /parallax-assets/layer-sky.jpg 1600w"
+      imagesrcset="/parallax-assets/layer-sky-1200.jpg 1200w, /parallax-assets/layer-sky.jpg 1600w, /parallax-assets/layer-sky-2400.jpg 2400w"
       imagesizes="100vw"
       fetchpriority="high"
     />
