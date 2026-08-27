@@ -2,7 +2,7 @@
  * Příprava obrázků pro public/ ze zdrojů v _source/.
  * Spouští se přes `npm run assets` a taky automaticky před buildem.
  *
- *  _source/layer-sky.jpg    → public/parallax-assets/layer-sky{,-1200,-2400}.jpg (srcset)
+ *  _source/photos/split-*.png → public/parallax-assets/layer-{sky,city}{,-1200,-2400}.webp
  *  _source/layer-sky.jpg    → public/parallax-assets/skyline.svg          (silueta horizontu, viz skyline.mjs)
  *  _source/vyhled-zapad.jpg → public/vyhled-zapad.jpg                (zmenšeno na 1100 px)
  *  _source/photos/*.jpg     → public/fotky/*.jpg                     (fotky partnerů)
@@ -26,14 +26,76 @@ const report = async (label, file) => console.log(`  ${label.padEnd(34)} ${await
 await mkdir(out('parallax-assets'), { recursive: true });
 
 // --- Vrstvy heru z ručního splitu ---------------------------------------
-// Pavel rozřezal fotku po linii horizontu na dvě PNG s alfou. Obě skládáme
-// zpátky do plného rámu 1536×2048, aby šly položit přes sebe se stejným
-// object-fit: při scrollu 0 se tak složí do původní fotky a teprve pohybem
-// se rozjedou. Kdyby měla každá vrstva vlastní ořez, musela by se pozice
-// dopočítávat zvlášť pro každý poměr stran.
-const FRAME_W = 1536, FRAME_H = 2048;
-const CITY_TOP = 1132; // = FRAME_H − výška split-mesto.png; ověřeno shodou řezu
-const empty = { create: { width: FRAME_W, height: FRAME_H, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } };
+// Pavel rozřezal fotku po linii horizontu na dvě PNG s alfou. Z jeho masek
+// bereme JEN alfu a nasazujeme ji na čistou fotku — RGB je tak v obou
+// vrstvách totožné s originálem a okraj masky nemůže do obrazu vnést nic
+// cizího (polopropustné pixely s barvou oblohy jinak podél celého hřebene
+// svítily jako světlá linka).
+//
+// Alfa nebe se navíc nafoukne o pár pixelů dolů, aby zasahovala pod město.
+// Kdyby se obě masky jen dotýkaly, musely by sedět pixel na pixel a tam, kde
+// se minou, prosvítá pozadí jako šmouha podél hřebene. Překryv to vylučuje.
+//
+// Obě vrstvy sdílí stejný rám i object-position, takže při scrollu 0 splynou
+// v původní fotku a teprve pohybem se rozjedou.
+const FRAME_W = 1600, FRAME_H = 2133;
+const MASK_W = 1536, MASK_H = 2048;
+// split-mesto.png se používá jen pro kontrolu — geometrii určuje hrana nebe
+
+const photoRGB = await sharp(src('layer-sky.jpg'))
+  .resize({ width: FRAME_W, height: FRAME_H, fit: 'fill', kernel: 'lanczos3' })
+  .removeAlpha()
+  .toBuffer();
+
+/** Alfu masky posadí do plného rámu masky (1536×2048) a vrátí ji jako raw. */
+async function maskAlpha(file, top) {
+  const placed = await sharp({
+    create: { width: MASK_W, height: MASK_H, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } },
+  })
+    .composite([{ input: await sharp(src(`photos/${file}`)).ensureAlpha().toBuffer(), top, left: 0 }])
+    .png()
+    .toBuffer();
+  return sharp(placed).extractChannel('alpha').raw().toBuffer();
+}
+
+// Obě masky byly řezané zvlášť a v 877 z 1536 sloupců se nedotýkají — mezera
+// je medián 8 px, ale místy až 181. Hřeben střech tak nepatří ani jedné vrstvě
+// a prosvítá jím pozadí. Bereme proto jako jedinou dělící linii spodní hranu
+// masky nebe (ta definuje siluetu proti obloze) a město dotahujeme až k ní:
+// všechno pod linií je město, pár pixelů překryvu navíc mezeru vylučuje.
+const skyMask = await maskAlpha('split-nebe.png', 0);
+const OVERLAP = 3;
+
+const boundary = new Int32Array(MASK_W).fill(MASK_H);
+for (let x = 0; x < MASK_W; x++) {
+  for (let y = MASK_H - 1; y >= 0; y--) {
+    if (skyMask[y * MASK_W + x] > 127) { boundary[x] = y; break; }
+  }
+}
+
+// Obě alfy odvozujeme z té linie, ne z masek přímo. Maska nebe má kolem věží
+// drobné otvory a tenké struktury (antény, jeřáby) vyříznuté zvlášť; jako
+// funkce hranice zmizí obě starosti naráz — díry se zaplní a tenké struktury
+// spadnou pod město, tedy do vrstvy, která se při scrollu hýbe pomalu a kam
+// patří. Jinak by se odtrhávaly a plavaly nad hřebenem.
+const skyMaskSolid = Buffer.alloc(MASK_W * MASK_H);
+const cityMask = Buffer.alloc(MASK_W * MASK_H);
+for (let x = 0; x < MASK_W; x++) {
+  for (let y = 0; y <= boundary[x] && y < MASK_H; y++) skyMaskSolid[y * MASK_W + x] = 255;
+  for (let y = Math.max(0, boundary[x] - OVERLAP); y < MASK_H; y++) cityMask[y * MASK_W + x] = 255;
+}
+
+const toFrame = (raw) =>
+  sharp(raw, { raw: { width: MASK_W, height: MASK_H, channels: 1 } })
+    .resize({ width: FRAME_W, height: FRAME_H, fit: 'fill' })
+    .toColourspace('b-w')
+    .png()
+    .toBuffer();
+
+const skyAlpha = await toFrame(skyMaskSolid);
+const cityAlpha = await toFrame(cityMask);
+
+const skyFrame = await sharp(photoRGB).joinChannel(skyAlpha).png().toBuffer();
 
 // Město dole dotáhnout do #1E0E06. Na mobilu je rám vidět celý až po spodní
 // hranu, takže bez doběhu by na styku s tmavým pásem pod herem byl schod.
@@ -46,57 +108,24 @@ const fadeToDeep = Buffer.from(
      <rect width="${FRAME_W}" height="${FRAME_H}" fill="url(#g)"/>
    </svg>`
 );
-const cityRaw = await sharp(empty)
-  .composite([
-    { input: await sharp(src('photos/split-mesto.png')).ensureAlpha().toBuffer(), top: CITY_TOP, left: 0 },
-    { input: fadeToDeep, top: 0, left: 0 },
-  ])
+const cityFrame = await sharp(
+  await sharp(photoRGB).composite([{ input: fadeToDeep, top: 0, left: 0 }]).toBuffer()
+)
+  .joinChannel(cityAlpha)
   .png()
   .toBuffer();
 
-// Okraj ruční masky nese polopropustné pixely s barvou oblohy. Položené přes
-// fotku se sečtou do světlé linky podél celého hřebene. Seřízneme proto alfu
-// o pixel dovnitř — rozmazat a tvrdě prahovat nechá krycí jen to, co má plně
-// krycí i okolí. Hrana pak padne na totožný obsah pod sebou a je neviditelná.
-const cityFrame = await sharp(await sharp(cityRaw).removeAlpha().toBuffer())
-  .joinChannel(await sharp(cityRaw).extractChannel('alpha').blur(1.1).threshold(242).toBuffer())
-  .png()
-  .toBuffer();
-
-for (const w of [1200, 1600, 2400]) {
-  const suffix = w === 1600 ? '' : `-${w}`;
-  const up = w > FRAME_W;
-  await sharp(cityFrame)
-    .resize({ width: w, kernel: 'lanczos3' })
-    .sharpen(up ? { sigma: 0.8, m1: 0.5, m2: 0.5 } : { sigma: 0.4, m1: 0, m2: 0 })
-    .webp({ quality: up ? 74 : 80, alphaQuality: 100, effort: 6 })
-    .toFile(out(`parallax-assets/layer-city${suffix}.webp`));
-  await report(`parallax-assets/layer-city${suffix}.webp`, out(`parallax-assets/layer-city${suffix}.webp`));
-}
-
-// --- Vrstva nebe: celá fotka, bez alfy ----------------------------------
-// Záměrně NEpoužíváme split-nebe.png. Kdyby vzadu bylo vyříznuté nebe, musely
-// by se obě alfy potkat pixel na pixel — a tam, kde se minou, prosvítá pozadí
-// jako tenká šmouha podél hřebene. S celou fotkou vzadu nemá mezera kde
-// vzniknout: průhledná část města leží nad totožným obsahem. Vlastní horizont
-// fotky se při scrollu propadá za město, takže dvojitý horizont nehrozí.
-// Hero je LCP prvek. Fotka je na výšku a object-fit:cover ji na telefonu
-// škáluje podle výšky, takže 390px displej při DPR2 potřebuje ~1200 px šířky.
-// Zdroj má 1600 px, jenže Retina notebook chce přes 3000 — 2400w variantu
-// proto zvětšujeme. Detail nepřibude, ale lanczos + jemný unsharp vypadá
-// znatelně ostřeji než dotažení, které si udělá prohlížeč sám, a Retina by
-// stejně sáhla po té 1600px, takže je to +31 kB, ne +288.
-// EDIT: až bude k dispozici originál fotky ve vyšším rozlišení, nahradit
-//       _source/layer-sky.jpg — tohle zvětšování pak odpadne.
-for (const w of [1200, 1600, 2400]) {
-  const suffix = w === 1600 ? '' : `-${w}`;
-  const up = w > 1600;
-  await sharp(src('layer-sky.jpg'))
-    .resize({ width: w, withoutEnlargement: !up, kernel: 'lanczos3' })
-    .sharpen(up ? { sigma: 0.8, m1: 0.5, m2: 0.5 } : { sigma: 0.4, m1: 0, m2: 0 })
-    .jpeg({ quality: up ? 76 : 82, progressive: true, mozjpeg: true, chromaSubsampling: '4:4:4' })
-    .toFile(out(`parallax-assets/layer-sky${suffix}.jpg`));
-  await report(`parallax-assets/layer-sky${suffix}.jpg`, out(`parallax-assets/layer-sky${suffix}.jpg`));
+for (const [name, buf] of [['sky', skyFrame], ['city', cityFrame]]) {
+  for (const w of [1200, 1600, 2400]) {
+    const suffix = w === 1600 ? '' : `-${w}`;
+    const up = w > FRAME_W;
+    await sharp(buf)
+      .resize({ width: w, kernel: 'lanczos3' })
+      .sharpen(up ? { sigma: 0.8, m1: 0.5, m2: 0.5 } : { sigma: 0.4, m1: 0, m2: 0 })
+      .webp({ quality: up ? 74 : 80, alphaQuality: 100, effort: 6 })
+      .toFile(out(`parallax-assets/layer-${name}${suffix}.webp`));
+    await report(`parallax-assets/layer-${name}${suffix}.webp`, out(`parallax-assets/layer-${name}${suffix}.webp`));
+  }
 }
 
 // --- Fotka do sekce Místo -----------------------------------------------

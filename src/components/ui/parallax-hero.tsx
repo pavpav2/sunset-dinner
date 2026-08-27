@@ -67,10 +67,11 @@ export function ParallaxHero() {
       <section className="parallax__header">
         <div className="parallax__visuals">
           <div data-parallax-layers className="parallax__layers">
-            {/* Vrstva 1 — nebe (celá fotka) */}
+            {/* Vrstva 1 — nebe, vyříznuté podle ruční masky (alfa pod linií
+                horizontu je průhledná) */}
             <img
-              src="/parallax-assets/layer-sky.jpg"
-              srcSet="/parallax-assets/layer-sky-1200.jpg 1200w, /parallax-assets/layer-sky.jpg 1600w, /parallax-assets/layer-sky-2400.jpg 2400w"
+              src="/parallax-assets/layer-sky.webp"
+              srcSet="/parallax-assets/layer-sky-1200.webp 1200w, /parallax-assets/layer-sky.webp 1600w, /parallax-assets/layer-sky-2400.webp 2400w"
               sizes="100vw"
               loading="eager"
               fetchPriority="high"
