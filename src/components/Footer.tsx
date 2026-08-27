@@ -31,6 +31,13 @@ export function Footer() {
           IG Bistro Karel
         </a>
       </div>
+      <div className="footer-partner">
+        <p className="meta">Partner večera</p>
+        {/* EDIT: použití loga Budvaru potvrdit s jejich marketingem — jde
+            o cizí ochrannou známku. Jednobarevná verze z budejovickybudvar.cz,
+            přebarvená na krémovou: na tmavém footeru by černá nebyla vidět. */}
+        <img src="/logos/budvar.svg" alt="Budějovický Budvar" width={142} height={82} />
+      </div>
       <p className="copy">© 2026 Střecha Radost × Bistro Karel</p>
     </footer>
   );

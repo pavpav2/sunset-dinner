@@ -3,7 +3,7 @@
  * Spouští se přes `npm run assets` a taky automaticky před buildem.
  *
  *  _source/layer-sky.jpg    → public/parallax-assets/layer-sky{,-1200}.jpg  (srcset pro hero)
- *  _source/layer-city.png   → public/parallax-assets/layer-city{,-1200}.webp (WebP s alfou místo 1,6MB PNG)
+ *  _source/layer-sky.jpg    → public/parallax-assets/skyline.svg          (silueta horizontu, viz skyline.mjs)
  *  _source/vyhled-zapad.jpg → public/vyhled-zapad.jpg                (zmenšeno na 1100 px)
  *  _source/photos/*.jpg     → public/fotky/*.jpg                     (fotky partnerů)
  *  _source/layer-sky.jpg    → public/og-image.jpg                    (1200×630 + titulek v Antonu)
@@ -37,11 +37,6 @@ for (const w of [1200, 1600]) {
     .toFile(out(`parallax-assets/layer-sky${suffix}.jpg`));
   await report(`parallax-assets/layer-sky${suffix}.jpg`, out(`parallax-assets/layer-sky${suffix}.jpg`));
 
-  await sharp(src('layer-city.png'))
-    .resize({ width: w, withoutEnlargement: true })
-    .webp({ quality: 82, alphaQuality: 90, effort: 6 })
-    .toFile(out(`parallax-assets/layer-city${suffix}.webp`));
-  await report(`parallax-assets/layer-city${suffix}.webp`, out(`parallax-assets/layer-city${suffix}.webp`));
 }
 
 // --- Fotka do sekce Místo -----------------------------------------------

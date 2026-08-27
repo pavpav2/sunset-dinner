@@ -101,21 +101,14 @@ export function ParallaxHero() {
               </div>
               <p className="hero-meta">Kurátorované menu · Nápoje · DJs</p>
             </div>
-            {/* Vrstva 3 — město, popředí s alpha fade */}
-            <img
-              src="/parallax-assets/layer-city.webp"
-              srcSet="/parallax-assets/layer-city-1200.webp 1200w, /parallax-assets/layer-city.webp 1600w"
-              sizes="100vw"
-              loading="eager"
-              decoding="async"
-              width={1600}
-              height={959}
-              data-parallax-layer="3"
-              alt=""
-              className="parallax__layer-img parallax__layer-img--front"
-            />
+            {/* Vrstva 3 — popředí: silueta Hradu a horizontu města, vyseknutá
+                z téže fotky (scripts/skyline.mjs). Ostrý řez mezi hradem
+                a oranžovou; pod hřebenem už je plná tma až do konce hera. */}
+            <div data-parallax-layer="3" className="parallax__skyline" aria-hidden="true">
+              <img src="/parallax-assets/skyline.svg" alt="" width={1600} height={540} />
+              <span className="parallax__skyline-fill" />
+            </div>
           </div>
-          <div className="parallax__fade" />
         </div>
 
         <div className="hero-topbar">

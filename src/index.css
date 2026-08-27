@@ -58,20 +58,22 @@ h1,h2,h3,.anton{
 /* Vrstvy nesmí chytat kliky — pod nimi je CTA. */
 .parallax__layer-img{
   position:absolute;inset:0;width:100%;height:100%;pointer-events:none;
-  object-fit:cover;object-position:center 60%;
+  object-fit:cover;object-position:center 42%;
 }
-/* Popředí: pás pevné výšky vůči viewportu, ne vůči šířce.
-   Fotka je na výšku, takže width:100%/height:auto by na širokém monitoru
-   vyrostla přes celý hero a překryla titulek. Horní alfa fade dělá maska —
-   drží se i po ořezu, který object-fit:cover udělá. */
-.parallax__layer-img--front{
-  top:auto;bottom:0;height:clamp(200px,38vh,460px);
-  object-position:center bottom;
-  -webkit-mask-image:linear-gradient(180deg,transparent 0%,#000 28%);
-  mask-image:linear-gradient(180deg,transparent 0%,#000 28%);
+/* Popředí: silueta horizontu místo fotografického města. Hřeben s Hradem
+   je ostrý řez proti oranžové, pod ním plná tma až do konce hera — hero tak
+   navazuje na tmavý pás pod sebou bez jakéhokoli švu, žádný fade netřeba. */
+.parallax__skyline{
+  position:absolute;left:0;right:0;top:35%;bottom:0;z-index:1;pointer-events:none;
+  display:flex;flex-direction:column;
 }
+/* -1px: spodní hrana SVG jinak proti výplni vytvoří vláskovou spáru
+   z antialiasingu, i když mají obě stejnou barvu */
+.parallax__skyline > img{width:100%;height:auto;display:block;margin-bottom:-1px}
+.parallax__skyline-fill{flex:1;background:var(--deep);display:block}
 .parallax__layer-title{
-  position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;
+  /* nad siluetou — CTA a datum sedí pod hřebenem, na tmavé, a musí být vidět */
+  position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;justify-content:center;
   padding:0 clamp(1.25rem,4vw,3rem) 16vh;color:var(--cream);
   text-shadow:0 1px 24px rgba(40,15,5,.35);
 }
@@ -106,11 +108,16 @@ h1,h2,h3,.anton{
 .hero-topbar .logo-text{color:var(--cream)}
 .hero-topbar .x{color:var(--gold)}
 .hero-topbar address{font-style:normal;text-align:right;color:var(--cream-muted)}
-.parallax__fade{
-  position:absolute;left:0;right:0;bottom:0;height:9vh;pointer-events:none;
-  background:linear-gradient(180deg,transparent, var(--deep));
-}
 @media (max-width:768px){
+  /* Silueta se škáluje šířkou, takže na telefonu vyjde jako tenký proužek
+     a Hrad v ní není poznat. Zvětšit a vycentrovat na katedrálu (ta je
+     v 39 % šířky), plus posadit níž, ať tmy není půl obrazovky. */
+  /* Na telefonu je silueta jen tenký proužek (škáluje se šířkou) a Hrad v ní
+     není poznat. Zkoušel jsem ji zvětšit, ale hřeben se pak rozešel
+     s horizontem na fotce — ta je na úzkém displeji omezená výškou, takže je
+     vidět celá i s vlastním městem, a to začalo nad siluetu vykukovat.
+     Necháváme 1:1 se šířkou a jen posazenou níž, ať tmy není půl obrazovky. */
+  .parallax__skyline{top:50%}
   .hero-topbar{flex-direction:column;align-items:flex-start;gap:.4rem}
   .hero-topbar address{text-align:left}
   .hero-cta{width:100%}
@@ -165,10 +172,11 @@ main section h2{font-size:clamp(2.2rem,5vw,3.6rem); line-height:.95; margin-bott
 .course .dish + .dish{margin-top:.5rem}
 .menu-foot{font-size:.8rem; color:var(--muted); margin-top:-.4rem}
 .menu-photos{
-  display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
   gap:1rem; margin-top:3.4rem;
 }
-.menu-photos img{width:100%; aspect-ratio:4/5; object-fit:cover; border-radius:4px}
+.menu-photos-note{font-size:.72rem; color:var(--muted); margin-top:.9rem}
+.menu-photos img{width:100%; aspect-ratio:16/9; object-fit:cover; border-radius:4px}
 .menu-photos figcaption{
   font-family:"Archivo",sans-serif; font-weight:600; text-transform:uppercase;
   letter-spacing:.16em; font-size:.7rem; color:var(--muted); margin-top:.6rem;
@@ -220,6 +228,11 @@ footer .btn:focus-visible{outline-color:var(--cream)}
 footer .social{display:flex; gap:2rem; justify-content:center; margin-bottom:2rem; flex-wrap:wrap}
 footer .social a{color:var(--gold); font-weight:600; font-size:.85rem; letter-spacing:.16em; text-transform:uppercase; text-decoration:none}
 footer .social a:hover{color:var(--cream)}
+.footer-partner{
+  display:flex; flex-direction:column; align-items:center; gap:.9rem;
+  margin:0 0 2.4rem;
+}
+.footer-partner img{height:64px; width:auto}
 footer .copy{font-size:.75rem; color:var(--cream-muted); letter-spacing:.16em; text-transform:uppercase}
 
 /* ---------- Reveal ---------- */
@@ -229,7 +242,6 @@ footer .copy{font-size:.75rem; color:var(--cream-muted); letter-spacing:.16em; t
 
 /* ---------- Responzivita ---------- */
 @media (max-width:768px){
-  .menu-photos img{aspect-ratio:3/2}
   .s-place .inner{grid-template-columns:1fr}
   .photos{grid-template-columns:1fr}
   .skyline-wrap{height:200px}

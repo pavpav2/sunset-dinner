@@ -77,6 +77,10 @@ export function MenuSection() {
             <figcaption>Dezerty</figcaption>
           </figure>
         </div>
+        <p className="menu-photos-note">
+          Ilustrační foto z běžného menu Bistra Karel — podoba chodů na Sunset Dinner Party se
+          může lišit.
+        </p>
       </Reveal>
     </section>
   );
