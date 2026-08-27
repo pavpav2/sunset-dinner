@@ -82,19 +82,22 @@ h1,h2,h3,.anton{
 /* Vrstvy nesmí chytat kliky — pod nimi je CTA. */
 .parallax__layer-img{
   position:absolute;inset:0;width:100%;height:100%;pointer-events:none;
-  object-fit:cover;object-position:center 42%;
+  /* 67 % posadí linii horizontu zhruba do 55 % výšky hera — tam, kde má být
+     řez mezi hradem a oranžovou. Obě vrstvy sdílí stejnou hodnotu, jinak by
+     se rozešly. */
+  object-fit:cover;object-position:center 67%;
 }
-/* Popředí: silueta horizontu místo fotografického města. Hřeben s Hradem
-   je ostrý řez proti oranžové, pod ním plná tma až do konce hera — hero tak
-   navazuje na tmavý pás pod sebou bez jakéhokoli švu, žádný fade netřeba. */
-.parallax__skyline{
-  position:absolute;left:0;right:0;top:35%;bottom:0;z-index:1;pointer-events:none;
-  display:flex;flex-direction:column;
+/* Popředí (město) sdílí .parallax__layer-img s nebem — stejný rám, stejný
+   object-fit. Rozdíl dělá jen alfa: nad hřebenem je průhledné. */
+
+/* Krátký doběh do tmy u spodní hrany. Podle poměru stran nemusí být vidět
+   ztmavený spodek rámu, a bez něj vzniká na styku s tmavým pásem pod herem
+   ostrý schod. Sahá jen přes spodní setmělé město — do západu nezasahuje.
+   Titulek má z-index 2, takže přes meta řádek se to nepřetáhne. */
+.parallax__fade{
+  position:absolute;left:0;right:0;bottom:0;height:16vh;pointer-events:none;
+  background:linear-gradient(180deg,transparent,var(--deep));
 }
-/* -1px: spodní hrana SVG jinak proti výplni vytvoří vláskovou spáru
-   z antialiasingu, i když mají obě stejnou barvu */
-.parallax__skyline > img{width:100%;height:auto;display:block;margin-bottom:-1px}
-.parallax__skyline-fill{flex:1;background:var(--deep);display:block}
 .parallax__layer-title{
   /* nad siluetou — CTA a datum sedí pod hřebenem, na tmavé, a musí být vidět */
   position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;justify-content:center;
@@ -136,12 +139,10 @@ h1,h2,h3,.anton{
   /* Silueta se škáluje šířkou, takže na telefonu vyjde jako tenký proužek
      a Hrad v ní není poznat. Zvětšit a vycentrovat na katedrálu (ta je
      v 39 % šířky), plus posadit níž, ať tmy není půl obrazovky. */
-  /* Na telefonu je silueta jen tenký proužek (škáluje se šířkou) a Hrad v ní
-     není poznat. Zkoušel jsem ji zvětšit, ale hřeben se pak rozešel
-     s horizontem na fotce — ta je na úzkém displeji omezená výškou, takže je
-     vidět celá i s vlastním městem, a to začalo nad siluetu vykukovat.
-     Necháváme 1:1 se šířkou a jen posazenou níž, ať tmy není půl obrazovky. */
-  .parallax__skyline{top:50%}
+  /* Na úzkém displeji je vidět celý rám, takže horizont leží níž (~61 %)
+     a meta řádek se ocital přímo na detailním městě. Zvednout blok titulku
+     tak, aby zůstal nad hřebenem. */
+  .parallax__layer-title{padding-bottom:25vh}
   .hero-topbar{flex-direction:column;align-items:flex-start;gap:.4rem}
   .hero-topbar address{text-align:left}
   .hero-cta{width:100%}

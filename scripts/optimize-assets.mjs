@@ -25,7 +25,61 @@ const report = async (label, file) => console.log(`  ${label.padEnd(34)} ${await
 
 await mkdir(out('parallax-assets'), { recursive: true });
 
-// --- Vrstva nebe ve třech šířkách ---------------------------------------
+// --- Vrstvy heru z ručního splitu ---------------------------------------
+// Pavel rozřezal fotku po linii horizontu na dvě PNG s alfou. Obě skládáme
+// zpátky do plného rámu 1536×2048, aby šly položit přes sebe se stejným
+// object-fit: při scrollu 0 se tak složí do původní fotky a teprve pohybem
+// se rozjedou. Kdyby měla každá vrstva vlastní ořez, musela by se pozice
+// dopočítávat zvlášť pro každý poměr stran.
+const FRAME_W = 1536, FRAME_H = 2048;
+const CITY_TOP = 1132; // = FRAME_H − výška split-mesto.png; ověřeno shodou řezu
+const empty = { create: { width: FRAME_W, height: FRAME_H, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } };
+
+// Město dole dotáhnout do #1E0E06. Na mobilu je rám vidět celý až po spodní
+// hranu, takže bez doběhu by na styku s tmavým pásem pod herem byl schod.
+const fadeToDeep = Buffer.from(
+  `<svg width="${FRAME_W}" height="${FRAME_H}" xmlns="http://www.w3.org/2000/svg">
+     <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+       <stop offset="0.845" stop-color="#1E0E06" stop-opacity="0"/>
+       <stop offset="1" stop-color="#1E0E06" stop-opacity="1"/>
+     </linearGradient></defs>
+     <rect width="${FRAME_W}" height="${FRAME_H}" fill="url(#g)"/>
+   </svg>`
+);
+const cityRaw = await sharp(empty)
+  .composite([
+    { input: await sharp(src('photos/split-mesto.png')).ensureAlpha().toBuffer(), top: CITY_TOP, left: 0 },
+    { input: fadeToDeep, top: 0, left: 0 },
+  ])
+  .png()
+  .toBuffer();
+
+// Okraj ruční masky nese polopropustné pixely s barvou oblohy. Položené přes
+// fotku se sečtou do světlé linky podél celého hřebene. Seřízneme proto alfu
+// o pixel dovnitř — rozmazat a tvrdě prahovat nechá krycí jen to, co má plně
+// krycí i okolí. Hrana pak padne na totožný obsah pod sebou a je neviditelná.
+const cityFrame = await sharp(await sharp(cityRaw).removeAlpha().toBuffer())
+  .joinChannel(await sharp(cityRaw).extractChannel('alpha').blur(1.1).threshold(242).toBuffer())
+  .png()
+  .toBuffer();
+
+for (const w of [1200, 1600, 2400]) {
+  const suffix = w === 1600 ? '' : `-${w}`;
+  const up = w > FRAME_W;
+  await sharp(cityFrame)
+    .resize({ width: w, kernel: 'lanczos3' })
+    .sharpen(up ? { sigma: 0.8, m1: 0.5, m2: 0.5 } : { sigma: 0.4, m1: 0, m2: 0 })
+    .webp({ quality: up ? 74 : 80, alphaQuality: 100, effort: 6 })
+    .toFile(out(`parallax-assets/layer-city${suffix}.webp`));
+  await report(`parallax-assets/layer-city${suffix}.webp`, out(`parallax-assets/layer-city${suffix}.webp`));
+}
+
+// --- Vrstva nebe: celá fotka, bez alfy ----------------------------------
+// Záměrně NEpoužíváme split-nebe.png. Kdyby vzadu bylo vyříznuté nebe, musely
+// by se obě alfy potkat pixel na pixel — a tam, kde se minou, prosvítá pozadí
+// jako tenká šmouha podél hřebene. S celou fotkou vzadu nemá mezera kde
+// vzniknout: průhledná část města leží nad totožným obsahem. Vlastní horizont
+// fotky se při scrollu propadá za město, takže dvojitý horizont nehrozí.
 // Hero je LCP prvek. Fotka je na výšku a object-fit:cover ji na telefonu
 // škáluje podle výšky, takže 390px displej při DPR2 potřebuje ~1200 px šířky.
 // Zdroj má 1600 px, jenže Retina notebook chce přes 3000 — 2400w variantu
