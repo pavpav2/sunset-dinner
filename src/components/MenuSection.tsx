@@ -50,7 +50,7 @@ export function MenuSection() {
               loading="lazy"
               decoding="async"
               width={900}
-              height={506}
+              height={1600}
             />
             <figcaption>Na stůl, na share</figcaption>
           </figure>
@@ -61,7 +61,7 @@ export function MenuSection() {
               loading="lazy"
               decoding="async"
               width={900}
-              height={506}
+              height={1600}
             />
             <figcaption>Hlavní chod</figcaption>
           </figure>
@@ -72,7 +72,7 @@ export function MenuSection() {
               loading="lazy"
               decoding="async"
               width={900}
-              height={506}
+              height={1600}
             />
             <figcaption>Dezerty</figcaption>
           </figure>

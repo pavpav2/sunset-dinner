@@ -130,6 +130,7 @@ for (const [name, buf] of [['sky', skyFrame], ['city', cityFrame]]) {
 
 // --- Fotka do sekce Místo -----------------------------------------------
 await sharp(src('vyhled-zapad.jpg'))
+  .rotate()
   .resize({ width: 1100, withoutEnlargement: true })
   .jpeg({ quality: 80, progressive: true, mozjpeg: true })
   .toFile(out('vyhled-zapad.jpg'));
@@ -147,6 +148,10 @@ const PHOTOS = [
 ];
 for (const { file, width } of PHOTOS) {
   await sharp(src(`photos/${file}`))
+    // .rotate() bez argumentu aplikuje EXIF orientaci. Fotky od Karla mají
+    // orientaci 6 (otočit o 90° CW) — bez tohohle je sharp uloží tak, jak leží
+    // v souboru, a značku přitom zahodí, takže v prohlížeči zůstanou položené.
+    .rotate()
     .resize({ width, withoutEnlargement: true })
     .jpeg({ quality: 80, progressive: true, mozjpeg: true })
     .toFile(out(`fotky/${file}`));
