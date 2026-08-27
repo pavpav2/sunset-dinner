@@ -25,10 +25,11 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+      # Pages musí být v repu zapnuté (jednorázově):
+      #   gh api repos/<user>/<repo>/pages -X POST -f build_type=workflow
+      # enablement:true tady nefunguje — ten endpoint chce admin práva,
+      # která GITHUB_TOKEN nemá.
       - uses: actions/configure-pages@v5
-        with:
-          # zapne Pages, pokud ještě nejsou zapnuté v Settings
-          enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
