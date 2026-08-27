@@ -6,7 +6,7 @@ import './index.css';
 
 // Lenis jednou globálně pro celou stránku (uvnitř se sám vypne
 // při prefers-reduced-motion).
-initSmoothScroll();
+void initSmoothScroll();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

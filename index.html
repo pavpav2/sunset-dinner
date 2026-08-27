@@ -27,8 +27,23 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;600;700;800&display=swap&subset=latin-ext" rel="stylesheet" />
 
-    <!-- LCP: nebe v heru načíst co nejdřív -->
-    <link rel="preload" as="image" href="/parallax-assets/layer-sky.jpg" fetchpriority="high" />
+    <!-- LCP: nebe v heru načíst co nejdřív. imagesrcset musí sedět se srcset
+         v parallax-hero.tsx, jinak by se stáhly obě varianty. -->
+    <link
+      rel="preload"
+      as="image"
+      href="/parallax-assets/layer-sky.jpg"
+      imagesrcset="/parallax-assets/layer-sky-1200.jpg 1200w, /parallax-assets/layer-sky.jpg 1600w"
+      imagesizes="100vw"
+      fetchpriority="high"
+    />
+    <link
+      rel="preload"
+      as="image"
+      href="/parallax-assets/layer-city.webp"
+      imagesrcset="/parallax-assets/layer-city-1200.webp 1200w, /parallax-assets/layer-city.webp 1600w"
+      imagesizes="100vw"
+    />
 
     <!-- TODO: Plausible — účet zatím není. Až bude doména dinner.strecharadost.cz
          v Plausible založená, stačí odkomentovat řádek níž; eventy "CTA GoOut"

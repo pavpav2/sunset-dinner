@@ -4,8 +4,6 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { prefersReducedMotion } from '../../lib/smooth-scroll';
 import { ADDRESS_LINE_1, ADDRESS_LINE_2, GOOUT_URL, trackCta } from '../../site';
 
@@ -15,37 +13,53 @@ export function ParallaxHero() {
   useEffect(() => {
     if (prefersReducedMotion()) return;
 
-    gsap.registerPlugin(ScrollTrigger);
-    const triggerElement = parallaxRef.current?.querySelector('[data-parallax-layers]');
-    if (!triggerElement) return;
+    // GSAP se dotahuje až po prvním vykreslení — hero je LCP prvek a nemá cenu
+    // kvůli scrollovým efektům držet paint. Lenis se startuje jednou globálně
+    // v main.tsx, ne tady.
+    let ctx: { revert: () => void } | undefined;
+    let cancelled = false;
 
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: triggerElement,
-          start: '0% 0%',
-          end: '100% 0%',
-          scrub: 0,
-        },
-      });
+    void (async () => {
+      const [{ default: gsap }, { ScrollTrigger }] = await Promise.all([
+        import('gsap'),
+        import('gsap/ScrollTrigger'),
+      ]);
+      if (cancelled) return;
 
-      const layers = [
-        { layer: '1', yPercent: 60 }, // nebe — největší hloubka
-        { layer: '2', yPercent: 35 }, // titulek + CTA
-        { layer: '3', yPercent: 10 }, // město — popředí
-      ];
+      gsap.registerPlugin(ScrollTrigger);
+      const triggerElement = parallaxRef.current?.querySelector('[data-parallax-layers]');
+      if (!triggerElement) return;
 
-      layers.forEach((layerObj, idx) => {
-        tl.to(
-          triggerElement.querySelectorAll(`[data-parallax-layer="${layerObj.layer}"]`),
-          { yPercent: layerObj.yPercent, ease: 'none' },
-          idx === 0 ? undefined : '<'
-        );
-      });
-    }, parallaxRef);
+      ctx = gsap.context(() => {
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: triggerElement,
+            start: '0% 0%',
+            end: '100% 0%',
+            scrub: 0,
+          },
+        });
 
-    // Lenis se startuje jednou globálně v main.tsx, ne tady.
-    return () => ctx.revert();
+        const layers = [
+          { layer: '1', yPercent: 60 }, // nebe — největší hloubka
+          { layer: '2', yPercent: 35 }, // titulek + CTA
+          { layer: '3', yPercent: 10 }, // město — popředí
+        ];
+
+        layers.forEach((layerObj, idx) => {
+          tl.to(
+            triggerElement.querySelectorAll(`[data-parallax-layer="${layerObj.layer}"]`),
+            { yPercent: layerObj.yPercent, ease: 'none' },
+            idx === 0 ? undefined : '<'
+          );
+        });
+      }, parallaxRef);
+    })();
+
+    return () => {
+      cancelled = true;
+      ctx?.revert();
+    };
   }, []);
 
   return (
@@ -56,6 +70,8 @@ export function ParallaxHero() {
             {/* Vrstva 1 — nebe (celá fotka) */}
             <img
               src="/parallax-assets/layer-sky.jpg"
+              srcSet="/parallax-assets/layer-sky-1200.jpg 1200w, /parallax-assets/layer-sky.jpg 1600w"
+              sizes="100vw"
               loading="eager"
               fetchPriority="high"
               decoding="async"
@@ -88,6 +104,8 @@ export function ParallaxHero() {
             {/* Vrstva 3 — město, popředí s alpha fade */}
             <img
               src="/parallax-assets/layer-city.webp"
+              srcSet="/parallax-assets/layer-city-1200.webp 1200w, /parallax-assets/layer-city.webp 1600w"
+              sizes="100vw"
               loading="eager"
               decoding="async"
               width={1600}

@@ -2,12 +2,12 @@
  * Příprava obrázků pro public/ ze zdrojů v _source/.
  * Spouští se přes `npm run assets` a taky automaticky před buildem.
  *
- *  _source/layer-sky.jpg    → public/parallax-assets/layer-sky.jpg   (beze změny, 267 kB ≤ 300 kB)
- *  _source/layer-city.png   → public/parallax-assets/layer-city.webp (WebP s alfou místo 1,6MB PNG)
+ *  _source/layer-sky.jpg    → public/parallax-assets/layer-sky{,-1200}.jpg  (srcset pro hero)
+ *  _source/layer-city.png   → public/parallax-assets/layer-city{,-1200}.webp (WebP s alfou místo 1,6MB PNG)
  *  _source/vyhled-zapad.jpg → public/vyhled-zapad.jpg                (zmenšeno na 1100 px)
  *  _source/layer-sky.jpg    → public/og-image.jpg                    (1200×630 + titulek v Antonu)
  */
-import { mkdir, copyFile, stat } from 'node:fs/promises';
+import { mkdir, stat } from 'node:fs/promises';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
@@ -24,15 +24,24 @@ const report = async (label, file) => console.log(`  ${label.padEnd(34)} ${await
 
 await mkdir(out('parallax-assets'), { recursive: true });
 
-// --- Vrstva 1: nebe -----------------------------------------------------
-await copyFile(src('layer-sky.jpg'), out('parallax-assets/layer-sky.jpg'));
-await report('parallax-assets/layer-sky.jpg', out('parallax-assets/layer-sky.jpg'));
+// --- Vrstvy heru ve dvou šířkách ----------------------------------------
+// Hero je LCP prvek. Fotka je na výšku a object-fit:cover ji na telefonu
+// škáluje podle výšky, takže 390px displej při DPR2 potřebuje ~1200 px šířky —
+// proto 1200w a 1600w, srcset si vybere. Menší varianta by se rozmazala.
+for (const w of [1200, 1600]) {
+  const suffix = w === 1600 ? '' : `-${w}`;
+  await sharp(src('layer-sky.jpg'))
+    .resize({ width: w, withoutEnlargement: true })
+    .jpeg({ quality: 82, progressive: true, mozjpeg: true, chromaSubsampling: '4:4:4' })
+    .toFile(out(`parallax-assets/layer-sky${suffix}.jpg`));
+  await report(`parallax-assets/layer-sky${suffix}.jpg`, out(`parallax-assets/layer-sky${suffix}.jpg`));
 
-// --- Vrstva 3: město, WebP s alfou --------------------------------------
-await sharp(src('layer-city.png'))
-  .webp({ quality: 82, alphaQuality: 90, effort: 6 })
-  .toFile(out('parallax-assets/layer-city.webp'));
-await report('parallax-assets/layer-city.webp', out('parallax-assets/layer-city.webp'));
+  await sharp(src('layer-city.png'))
+    .resize({ width: w, withoutEnlargement: true })
+    .webp({ quality: 82, alphaQuality: 90, effort: 6 })
+    .toFile(out(`parallax-assets/layer-city${suffix}.webp`));
+  await report(`parallax-assets/layer-city${suffix}.webp`, out(`parallax-assets/layer-city${suffix}.webp`));
+}
 
 // --- Fotka do sekce Místo -----------------------------------------------
 await sharp(src('vyhled-zapad.jpg'))
