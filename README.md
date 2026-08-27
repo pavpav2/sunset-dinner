@@ -45,6 +45,10 @@ skript pustit ručně a commitnout.
 | `parallax-assets/layer-city-1200.webp` | 61 kB | 1200w pro telefony (srcset) |
 | `vyhled-zapad.jpg` | 103 kB | zmenšeno na 1100 px |
 | `og-image.jpg` | 45 kB | provizorní 1200×630, titulek vysázený z Antonu |
+| `fotky/radost-*.jpg` | ~140 kB | Střecha Radost, do sekce Místo |
+| `fotky/karel-*.jpg` | ~50 kB | Bistro Karel, do sekce Menu |
+
+Původ fotek partnerů a podmínky použití: `_source/photos/PUVOD.md`.
 
 Obě vrstvy heru mají `srcset` 1200w/1600w a `<link rel=preload>` s odpovídajícím
 `imagesrcset` — při změně jedné je potřeba upravit i druhou, jinak se stáhnou obě

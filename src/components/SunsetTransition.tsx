@@ -6,13 +6,15 @@
  * herem rozsvěcí zpátky do krému a od Menu jede původní západový průběh z v2
  * beze změny.
  *
- * Dole panorama z v2 (věž + tabulový pás) — přesně ve své původní pozici:
- * silueta na krému těsně nad sekcí Menu.
+ * Pod gradientem stojí panorama z v2 (věž + tabulový pás) na plném krému —
+ * přesně ve své původní pozici: silueta těsně nad sekcí Menu. Kdyby zůstalo
+ * uvnitř gradientu, hnědá věž na hnědém podkladu zmizí.
  */
 export function SunsetTransition() {
   return (
-    <div className="transition-band" aria-hidden="true">
-      <div className="panorama">
+    <>
+      <div className="transition-band" aria-hidden="true" />
+      <div className="panorama" aria-hidden="true">
         <div className="skyline-wrap">
           {/* EDIT: možno nahradit souborem /parallax-assets/tower.png */}
           <svg className="tower" viewBox="0 0 200 560" xmlns="http://www.w3.org/2000/svg">
@@ -84,6 +86,6 @@ export function SunsetTransition() {
           </g>
         </svg>
       </div>
-    </div>
+    </>
   );
 }

@@ -8,15 +8,15 @@ export function MenuSection() {
           Signature menu — Bistro Karel
         </p>
         <h2>
-          Párování s pivem,
+          Od prvního chodu
           <br />
-          od prvního chodu po dezert
+          po dezert
         </h2>
         <p className="lead">
           Bistro Karel nám celý rok vozí na Střechu to nejlepší ze své divoké zahrady v Troji. Tak
           jsme se rozhodli to oslavit: menu stvořené jen pro tenhle večer, sdílené mísy u dlouhé
-          tabule, žádný spěch. Parťákem večera je Budvar — najdete ho v glazuře, v karamelu i ve
-          sklenici.
+          tabule, žádný spěch. Párování s pivem jede celým menu — parťákem večera je Budvar,
+          najdete ho v glazuře, v karamelu i ve sklenici.
         </p>
         <div className="menu-card">
           <div className="course">
@@ -39,6 +39,44 @@ export function MenuSection() {
           </div>
         </div>
         <p className="menu-foot">Vaříme sezónně — menu se může v detailech proměnit.</p>
+        {/* EDIT: fotky jsou z běžného menu Bistra Karel (bistrokarel.cz/menus),
+            ne z tohohle večera — slouží jako ilustrace stylu. Až budou fotky
+            přímo ze Sunset Dinner Party, vyměnit. Původ viz _source/photos/PUVOD.md */}
+        <div className="menu-photos">
+          <figure>
+            <img
+              src="/fotky/karel-share.jpg"
+              alt="Sdílené mísy s pečivem, namáčením a chipsy na dlouhém stole"
+              loading="lazy"
+              decoding="async"
+              width={900}
+              height={506}
+            />
+            <figcaption>Na stůl, na share</figcaption>
+          </figure>
+          <figure>
+            <img
+              src="/fotky/karel-gril.jpg"
+              alt="Maso na roštu nad otevřeným ohněm"
+              loading="lazy"
+              decoding="async"
+              width={900}
+              height={506}
+            />
+            <figcaption>Hlavní chod</figcaption>
+          </figure>
+          <figure>
+            <img
+              src="/fotky/karel-dezert.jpg"
+              alt="Dezert s krémem a drobenkou na talíři"
+              loading="lazy"
+              decoding="async"
+              width={900}
+              height={506}
+            />
+            <figcaption>Dezerty</figcaption>
+          </figure>
+        </div>
       </Reveal>
     </section>
   );

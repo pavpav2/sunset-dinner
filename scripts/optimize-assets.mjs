@@ -5,6 +5,7 @@
  *  _source/layer-sky.jpg    → public/parallax-assets/layer-sky{,-1200}.jpg  (srcset pro hero)
  *  _source/layer-city.png   → public/parallax-assets/layer-city{,-1200}.webp (WebP s alfou místo 1,6MB PNG)
  *  _source/vyhled-zapad.jpg → public/vyhled-zapad.jpg                (zmenšeno na 1100 px)
+ *  _source/photos/*.jpg     → public/fotky/*.jpg                     (fotky partnerů)
  *  _source/layer-sky.jpg    → public/og-image.jpg                    (1200×630 + titulek v Antonu)
  */
 import { mkdir, stat } from 'node:fs/promises';
@@ -49,6 +50,24 @@ await sharp(src('vyhled-zapad.jpg'))
   .jpeg({ quality: 80, progressive: true, mozjpeg: true })
   .toFile(out('vyhled-zapad.jpg'));
 await report('vyhled-zapad.jpg', out('vyhled-zapad.jpg'));
+
+// --- Fotky ze Střechy Radost a Bistra Karel ------------------------------
+// Zdroje a souhlas viz _source/photos/PUVOD.md
+await mkdir(out('fotky'), { recursive: true });
+const PHOTOS = [
+  { file: 'radost-strecha.jpg', width: 1100 },
+  { file: 'radost-catering.jpg', width: 1100 },
+  { file: 'karel-share.jpg', width: 900 },
+  { file: 'karel-gril.jpg', width: 900 },
+  { file: 'karel-dezert.jpg', width: 900 },
+];
+for (const { file, width } of PHOTOS) {
+  await sharp(src(`photos/${file}`))
+    .resize({ width, withoutEnlargement: true })
+    .jpeg({ quality: 80, progressive: true, mozjpeg: true })
+    .toFile(out(`fotky/${file}`));
+  await report(`fotky/${file}`, out(`fotky/${file}`));
+}
 
 // --- Provizorní OG obraz 1200×630 ---------------------------------------
 // EDIT: finálně nahradit GoOut coverem 1920×1005 (a upravit og:image:width/height

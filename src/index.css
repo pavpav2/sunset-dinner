@@ -107,7 +107,7 @@ h1,h2,h3,.anton{
 .hero-topbar .x{color:var(--gold)}
 .hero-topbar address{font-style:normal;text-align:right;color:var(--cream-muted)}
 .parallax__fade{
-  position:absolute;left:0;right:0;bottom:0;height:22vh;pointer-events:none;
+  position:absolute;left:0;right:0;bottom:0;height:9vh;pointer-events:none;
   background:linear-gradient(180deg,transparent, var(--deep));
 }
 @media (max-width:768px){
@@ -124,14 +124,17 @@ h1,h2,h3,.anton{
    Dole panorama z v2 (věž + tabulový pás) — stejná pozice jako v v2:
    silueta na krému těsně nad sekcí Menu.
    ===================================================================== */
+/* Tma a západ jsou oddělené: hero ústí do plochého tmavého bloku (ten drží
+   svou vlastní identitu), pak krátký zdvih do krému přes hnědou — bez
+   západových oranží, ty patří až sekcím Menu → Noc, aby se průběh neopakoval
+   dvakrát. Panorama pak stojí na čistém krému, stejně jako ve v2. */
 .transition-band{
-  position:relative; z-index:1; display:flex; flex-direction:column; justify-content:flex-end;
-  min-height:clamp(420px,62vh,760px);
+  position:relative; z-index:1;
+  min-height:clamp(300px,42vh,520px);
   background:linear-gradient(180deg,
-    var(--deep) 0%, var(--night) 14%, var(--ember) 34%,
-    var(--terracotta) 52%, var(--apricot) 68%, var(--gold) 82%, var(--cream) 96%);
+    var(--deep) 0%, var(--deep) 38%, var(--brown) 66%, var(--cream) 100%);
 }
-.panorama{position:relative; margin-top:auto}
+.panorama{position:relative; z-index:1; background:var(--cream)}
 .skyline-wrap{position:relative; overflow:hidden; height:clamp(180px,24vw,300px); z-index:2}
 .skyline-wrap .tower{position:absolute; left:73.05%; bottom:0; height:100%; width:auto}
 .table-band{position:relative; z-index:2; width:100%; height:auto}
@@ -161,14 +164,26 @@ main section h2{font-size:clamp(2.2rem,5vw,3.6rem); line-height:.95; margin-bott
 .course .dish small{display:block; font-size:.9rem; font-weight:400; color:var(--muted)}
 .course .dish + .dish{margin-top:.5rem}
 .menu-foot{font-size:.8rem; color:var(--muted); margin-top:-.4rem}
+.menu-photos{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  gap:1rem; margin-top:3.4rem;
+}
+.menu-photos img{width:100%; aspect-ratio:4/5; object-fit:cover; border-radius:4px}
+.menu-photos figcaption{
+  font-family:"Archivo",sans-serif; font-weight:600; text-transform:uppercase;
+  letter-spacing:.16em; font-size:.7rem; color:var(--muted); margin-top:.6rem;
+}
 
 /* ---------- Místo ---------- */
 .s-place .inner{display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:start}
 .s-place .addr{font-style:normal; font-size:1.15rem; font-weight:600; margin-bottom:.8rem}
 .s-place a{color:var(--cream); font-weight:700}
 .s-place a:hover{color:var(--gold)}
-.photos{display:grid; gap:1rem}
-.photos img{width:100%; height:auto; border-radius:4px}
+/* Tři fotky pod sebou by přerostly textový sloupec vedle — první jde přes
+   celou šířku, zbylé dvě se srovnají vedle sebe. */
+.photos{display:grid; grid-template-columns:1fr 1fr; gap:1rem}
+.photos img{width:100%; aspect-ratio:3/2; object-fit:cover; border-radius:4px}
+.photos img:first-child{grid-column:1 / -1}
 .photo-ph{
   aspect-ratio:3/2; background:rgba(248,238,221,.14); border-radius:4px;
   display:flex; align-items:center; justify-content:center;
@@ -214,7 +229,9 @@ footer .copy{font-size:.75rem; color:var(--cream-muted); letter-spacing:.16em; t
 
 /* ---------- Responzivita ---------- */
 @media (max-width:768px){
+  .menu-photos img{aspect-ratio:3/2}
   .s-place .inner{grid-template-columns:1fr}
+  .photos{grid-template-columns:1fr}
   .skyline-wrap{height:200px}
   .skyline-wrap .tower{left:auto; right:10%}
   footer .btn{width:auto; display:inline-flex; padding:16px 40px}

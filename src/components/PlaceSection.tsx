@@ -20,20 +20,32 @@ export function PlaceSection() {
             Otevřít mapu ↗
           </a>
         </div>
+        {/* Fotky ze strecharadost.cz — původ viz _source/photos/PUVOD.md */}
         <div className="photos">
           <img
             src="/vyhled-zapad.jpg"
             alt="Výhled ze Střechy Radost na Pražský hrad při západu slunce"
             loading="lazy"
             decoding="async"
-            width={1200}
-            height={1600}
+            width={1100}
+            height={1467}
           />
-          {/* EDIT: druhá fotka — atmosféra tabule/akce; nahradit placeholder za
-              <img src="/foto-tabule.jpg" alt="…" loading="lazy" /> */}
-          <div className="photo-ph">
-            <span>foto tabule</span>
-          </div>
+          <img
+            src="/fotky/radost-strecha.jpg"
+            alt="Střecha Radost při zlaté hodině — lidé na terase nad Žižkovem"
+            loading="lazy"
+            decoding="async"
+            width={1100}
+            height={733}
+          />
+          <img
+            src="/fotky/radost-catering.jpg"
+            alt="Obsluha chystá jídlo na Střeše Radost"
+            loading="lazy"
+            decoding="async"
+            width={1100}
+            height={733}
+          />
         </div>
       </Reveal>
     </section>
