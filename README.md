@@ -1,7 +1,7 @@
 # Sunset Dinner Party
 
 Jednostránkový web pro **Sunset Dinner Party — Střecha Radost × Bistro Karel**,
-středa 9. 9. od 18:00, nám. Winstona Churchilla 2, Praha 3 — Žižkov.
+středa 9. 9. od 17:30, nám. Winstona Churchilla 2, Praha 3 — Žižkov.
 
 Produkce: <https://dinner.strecharadost.cz>
 

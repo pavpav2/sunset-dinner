@@ -189,7 +189,7 @@ const overlay = Buffer.from(
        titleBaseline2 - TITLE * 0.17
      }" r="${TITLE * 0.17}" fill="#ECA06C"/>
      ${svgText(
-       'STŘEDA 9. 9. OD 18:00 · STŘECHA RADOST × BISTRO KAREL',
+       'STŘEDA 9. 9. OD 17:30 · STŘECHA RADOST × BISTRO KAREL',
        DATE,
        PAD,
        dateBaseline,

@@ -98,7 +98,7 @@ export function ParallaxHero() {
                 >
                   Vstupenky na GoOut
                 </a>
-                <p className="hero-date">Středa 9. 9. od 18:00</p>
+                <p className="hero-date">Středa 9. 9. od 17:30</p>
               </div>
               <p className="hero-meta">Kurátorované menu · Nápoje · DJs</p>
             </div>
