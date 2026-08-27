@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sunset Dinner Party — Střecha Radost × Bistro Karel</title>
+<meta name="description" content="Sunset Dinner Party na Střeše Radost. Kurátorované menu od Bistra Karel, nápoje, DJs. Středa 9. 9. od 18:00, nám. Winstona Churchilla 2, Praha 3 — Žižkov. Vstupenky na GoOut.">
+<meta property="og:title" content="Sunset Dinner Party — Střecha Radost × Bistro Karel">
+<meta property="og:description" content="Kurátorované menu · Nápoje · DJs — Středa 9. 9. od 18:00, Žižkov.">
+<!-- EDIT: OG obraz = GoOut cover 1920×1005 -->
+<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><radialGradient id="s" cx="42%25" cy="38%25" r="70%25"><stop offset="0" stop-color="%23F7D492"/><stop offset=".55" stop-color="%23ECA06C"/><stop offset="1" stop-color="%23C7663F"/></radialGradient></defs><circle cx="32" cy="32" r="30" fill="url(%23s)"/></svg>'>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#F8EEDD; --brown:#472418; --terracotta:#BE5433; --terracotta-hover:#9C3F20;
+  --muted:rgba(71,36,24,.7); --gold:#F7D492; --apricot:#ECA06C; --sunset:#C7663F;
+  --ember:#6E2F1B; --night:#2A1409; --deep:#1E0E06; --cream-muted:rgba(248,238,221,.7);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{
+  background:var(--deep); color:var(--brown);
+  font-family:"Archivo",sans-serif; font-weight:400; line-height:1.6;
+}
+img,svg{display:block}
+a{color:var(--terracotta)}
+a:hover{color:var(--terracotta-hover)}
+a:focus-visible{outline:2px solid var(--brown); outline-offset:3px}
+.on-dark a:focus-visible{outline-color:var(--cream)}
+h1,h2,h3,.anton{
+  font-family:"Anton",sans-serif; font-weight:400; text-transform:uppercase;
+  letter-spacing:.01em; line-height:.9;
+}
+.meta{
+  font-family:"Archivo",sans-serif; font-weight:600; text-transform:uppercase;
+  letter-spacing:.2em; color:var(--muted); font-size:.78rem;
+}
+.on-dark{color:var(--cream)}
+.on-dark .meta{color:var(--cream-muted)}
+
+/* ---------- Parallax hero ---------- */
+.hero{overflow:hidden}
+.parallax-layer{will-change:transform}
+.panorama{position:relative}
+.hero-sun{
+  position:absolute; left:58%; top:-150px; width:min(26vw,180px); height:min(26vw,180px);
+  border-radius:50%; z-index:0; pointer-events:none; will-change:transform;
+  background:radial-gradient(circle at 42% 38%, #F7D492 0%, #ECA06C 55%, #C7663F 100%);
+  box-shadow:0 0 70px 22px rgba(236,160,108,.5);
+}
+.skyline-wrap{z-index:2}
+.table-band{position:relative; z-index:2}
+@media (prefers-reduced-motion: reduce){.hero-sun{display:none}}
+
+/* ---------- Hero ---------- */
+.hero{
+  min-height:100vh; min-height:100svh; display:flex; flex-direction:column;
+  background:var(--cream); position:relative; z-index:1;
+  opacity:0; transition:opacity .3s ease;
+}
+.hero.in{opacity:1}
+@media (prefers-reduced-motion: reduce){.hero{opacity:1;transition:none}}
+.topbar{
+  display:flex; justify-content:space-between; align-items:center; gap:1.5rem;
+  padding:1.4rem clamp(1.25rem,4vw,3rem);
+}
+.logos{display:flex; align-items:center; gap:1rem}
+/* EDIT: nahradit textová loga soubory:
+   <img src="assets/radost-logo.png" alt="Střecha Radost" style="height:46px">
+   <span class="x">×</span>
+   <img src="assets/karel-logo.avif" alt="Bistro Karel" style="height:40px; mix-blend-mode:multiply">
+*/
+.logos .logo-text{font-family:"Anton",sans-serif; text-transform:uppercase; letter-spacing:.04em; font-size:1.05rem}
+.logos .x{color:var(--terracotta); font-weight:800; font-family:"Archivo",sans-serif}
+.topbar address{font-style:normal; text-align:right}
+
+.hero-main{
+  flex:1; display:flex; flex-direction:column; justify-content:center;
+  padding:1.5rem clamp(1.25rem,4vw,3rem); text-align:left;
+}
+h1{font-size:clamp(64px,12vw,230px); margin:0}
+h1 .sun{
+  display:inline-block; width:.34em; height:.34em; border-radius:50%;
+  margin-left:.06em; vertical-align:baseline;
+  background:radial-gradient(circle at 42% 38%, #F7D492 0%, #ECA06C 55%, #C7663F 100%);
+}
+.hero-cta{margin-top:2.4rem; display:flex; flex-direction:column; align-items:flex-start; gap:1.1rem}
+.cta-row{display:flex; align-items:center; gap:1.8rem; flex-wrap:wrap}
+.btn{
+  display:inline-block; background:var(--terracotta); color:var(--cream);
+  font-family:"Archivo",sans-serif; font-weight:700; font-size:1rem;
+  text-decoration:none; border-radius:999px; padding:24px 52px;
+  transition:background .15s ease;
+}
+.btn:hover{background:var(--terracotta-hover); color:var(--cream)}
+.btn:focus-visible{outline:2px solid var(--brown); outline-offset:3px}
+.hero-date{font-size:clamp(1.4rem,2.6vw,2.1rem)}
+.hero-meta{letter-spacing:.3em}
+
+/* ---------- Panorama ---------- */
+.panorama{margin-top:auto}
+.skyline-wrap{position:relative; overflow:hidden; height:clamp(180px,24vw,300px)}
+.skyline-wrap .tower{position:absolute; left:73.05%; bottom:0; height:100%; width:auto}
+.table-band{width:100%; height:auto}
+
+/* ---------- Sekce — scrollový západ ---------- */
+section{position:relative; z-index:1; padding:6rem clamp(1.25rem,4vw,3rem)}
+section > .inner{max-width:1100px; margin:0 auto}
+.s-menu{background:linear-gradient(180deg, var(--cream) 0%, var(--gold) 100%)}
+.s-drinks{background:linear-gradient(180deg, var(--gold) 0%, var(--apricot) 100%)}
+.s-place{background:linear-gradient(180deg, var(--apricot) 0%, var(--sunset) 55%, var(--ember) 100%)}
+.s-night{background:linear-gradient(180deg, var(--ember) 0%, var(--night) 55%, var(--deep) 100%)}
+section h2{font-size:clamp(2.2rem,5vw,3.6rem); margin-bottom:1.4rem}
+.lead{max-width:52ch; font-size:1.05rem}
+
+/* ---------- Menu karta ---------- */
+.menu-card{margin-top:2.6rem; max-width:640px}
+.course{margin-bottom:2.2rem}
+.course .label{
+  font-family:"Anton",sans-serif; text-transform:uppercase; letter-spacing:.06em;
+  font-size:1.05rem; margin-bottom:.6rem;
+}
+.course .dish{font-size:1.1rem; font-weight:600; line-height:1.45}
+.course .dish small{display:block; font-size:.9rem; font-weight:400; color:var(--muted)}
+.menu-foot{font-size:.8rem; color:var(--muted); margin-top:-.4rem}
+
+/* ---------- Místo ---------- */
+.s-place .inner{display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:start}
+.s-place .addr{font-style:normal; font-size:1.15rem; font-weight:600; margin-bottom:.8rem}
+.s-place a{color:var(--cream); font-weight:700}
+.s-place a:hover{color:var(--gold)}
+.photos{display:grid; gap:1rem}
+/* EDIT: nahradit placeholdery fotkami střechy:
+   <img src="assets/photo-1.webp" alt="Střecha Radost při západu slunce" loading="lazy"> */
+.photo-ph{
+  aspect-ratio:3/2; background:rgba(248,238,221,.14); border-radius:4px;
+  display:flex; align-items:center; justify-content:center;
+}
+.photo-ph span{font-size:.72rem; letter-spacing:.2em; text-transform:uppercase; color:var(--cream-muted); font-weight:600}
+
+/* ---------- Noc ---------- */
+.s-night{text-align:center; padding-bottom:2rem}
+.s-night h2{font-size:clamp(2.4rem,6vw,4rem)}
+.s-night .lead{margin:0 auto; max-width:40ch}
+.night-band{width:100%; height:auto; margin-top:4rem}
+
+/* ---------- Footer ---------- */
+footer{
+  background:var(--deep); color:var(--cream); text-align:center;
+  padding:3rem clamp(1.25rem,4vw,3rem) 3rem; position:relative; z-index:1;
+}
+footer .logos{justify-content:center; margin-bottom:2rem}
+footer .logo-text{color:var(--cream)}
+footer .x{color:var(--apricot)}
+footer .btn{margin-bottom:2.4rem}
+footer .btn:focus-visible{outline-color:var(--cream)}
+footer .social{display:flex; gap:2rem; justify-content:center; margin-bottom:2rem}
+footer .social a{color:var(--gold); font-weight:600; font-size:.85rem; letter-spacing:.16em; text-transform:uppercase; text-decoration:none}
+footer .social a:hover{color:var(--cream)}
+footer .copy{font-size:.75rem; color:var(--cream-muted); letter-spacing:.16em; text-transform:uppercase}
+
+/* ---------- Reveal ---------- */
+.reveal{opacity:0; transform:translateY(18px); transition:opacity .6s ease, transform .6s ease}
+.reveal.in{opacity:1; transform:none}
+@media (prefers-reduced-motion: reduce){.reveal{opacity:1; transform:none; transition:none}}
+
+/* ---------- Responzivita ---------- */
+@media (max-width:768px){
+  .topbar{flex-direction:column; align-items:flex-start; gap:.6rem}
+  .topbar address{text-align:left}
+  .cta-row{width:100%}
+  .btn{width:100%; text-align:center; min-height:56px; padding:16px 24px; display:flex; align-items:center; justify-content:center}
+  footer .btn{width:auto; display:inline-flex; padding:16px 40px}
+  .s-place .inner{grid-template-columns:1fr}
+  .skyline-wrap{height:200px}
+  .skyline-wrap .tower{left:auto; right:10%}
+}
+</style>
+</head>
+<body>
+
+<header class="hero" id="hero">
+  <div class="topbar">
+    <div class="logos">
+      <!-- EDIT: loga — viz komentář v CSS -->
+      <span class="logo-text">Radost</span>
+      <span class="x" aria-hidden="true">×</span>
+      <span class="logo-text">Bistro Karel</span>
+    </div>
+    <address class="meta">nám. Winstona Churchilla 2,<br>Praha 3 — Žižkov</address>
+  </div>
+
+  <div class="hero-main parallax-layer" id="plTitle">
+    <h1>Sunset Dinner<br>Party<span class="sun" aria-hidden="true"></span></h1>
+    <div class="hero-cta">
+      <div class="cta-row">
+        <!-- EDIT: GoOut URL -->
+        <a class="btn" id="cta-hero" href="https://goout.net" target="_blank" rel="noopener">Vstupenky na GoOut</a>
+        <p class="hero-date anton">Středa 9. 9. od 18:00</p>
+      </div>
+      <p class="meta hero-meta">Kurátorované menu · Nápoje · DJs</p>
+    </div>
+  </div>
+
+  <div class="panorama" aria-hidden="true">
+    <div class="hero-sun parallax-layer" id="plSun"></div>
+    <div class="skyline-wrap">
+      <!-- EDIT: možno nahradit souborem assets/tower.png -->
+      <svg class="tower" viewBox="0 0 200 560" xmlns="http://www.w3.org/2000/svg">
+        <g fill="#472418">
+          <!-- anténa -->
+          <rect x="97" y="0" width="6" height="70"/>
+          <rect x="93" y="52" width="14" height="8" rx="3"/>
+          <rect x="94" y="70" width="12" height="60"/>
+          <rect x="90" y="78" width="20" height="5" rx="2"/><rect x="90" y="92" width="20" height="5" rx="2"/>
+          <rect x="90" y="106" width="20" height="5" rx="2"/><rect x="90" y="120" width="20" height="5" rx="2"/>
+          <!-- horní část tubusu -->
+          <rect x="88" y="130" width="24" height="110"/>
+          <!-- kabiny / prstence -->
+          <rect x="64" y="240" width="72" height="26" rx="10"/>
+          <rect x="58" y="286" width="84" height="30" rx="12"/>
+          <rect x="74" y="266" width="52" height="20"/>
+          <!-- boční tubus -->
+          <rect x="66" y="228" width="14" height="180" rx="6"/>
+          <!-- hlavní tubus -->
+          <rect x="86" y="240" width="28" height="320"/>
+          <!-- spodní prstenec -->
+          <rect x="52" y="400" width="96" height="34" rx="14"/>
+          <!-- nohy -->
+          <rect x="70" y="434" width="12" height="126"/>
+          <rect x="118" y="434" width="12" height="126"/>
+        </g>
+      </svg>
+    </div>
+    <!-- EDIT: nahradit souborem assets/table.svg -->
+    <svg class="table-band" viewBox="0 0 1600 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+      <path d="M0 30 Q200 68 400 30 T800 30 T1200 30 T1600 30" fill="none" stroke="#472418" stroke-width="3"/>
+      <g stroke="#472418" stroke-width="2">
+        <line x1="200" y1="49" x2="200" y2="64"/><line x1="600" y1="49" x2="600" y2="64"/>
+        <line x1="1000" y1="49" x2="1000" y2="64"/><line x1="1400" y1="49" x2="1400" y2="64"/>
+      </g>
+      <g fill="#F7D492" stroke="#472418" stroke-width="2">
+        <circle cx="200" cy="72" r="8"/><circle cx="600" cy="72" r="8"/>
+        <circle cx="1000" cy="72" r="8"/><circle cx="1400" cy="72" r="8"/>
+      </g>
+      <g fill="#472418">
+        <ellipse cx="230" cy="128" rx="16" ry="4"/><ellipse cx="520" cy="128" rx="16" ry="4"/>
+        <ellipse cx="810" cy="128" rx="16" ry="4"/><ellipse cx="1100" cy="128" rx="16" ry="4"/>
+        <ellipse cx="1390" cy="128" rx="16" ry="4"/>
+        <rect x="0" y="132" width="1600" height="8"/>
+        <rect x="90" y="140" width="6" height="48"/><rect x="370" y="140" width="6" height="48"/>
+        <rect x="650" y="140" width="6" height="48"/><rect x="930" y="140" width="6" height="48"/>
+        <rect x="1210" y="140" width="6" height="48"/><rect x="1490" y="140" width="6" height="48"/>
+      </g>
+    </svg>
+  </div>
+</header>
+
+<main>
+  <!-- ======== MENU (krém → zlatá) ======== -->
+  <section class="s-menu">
+    <div class="inner reveal">
+      <p class="meta" style="margin-bottom:1rem">Signature menu — Bistro Karel</p>
+      <h2>Párování s pivem,<br>od prvního chodu po dezert</h2>
+      <p class="lead">Bistro Karel nám celý rok vozí na Střechu to nejlepší ze své divoké zahrady v Troji. Tak jsme se rozhodli to oslavit: menu stvořené jen pro tenhle večer, sdílené mísy u dlouhé tabule, žádný spěch. Parťákem večera je Budvar — najdete ho v glazuře, v karamelu i ve sklenici.</p>
+      <div class="menu-card">
+        <div class="course">
+          <p class="label">Na stůl, na share</p>
+          <p class="dish">Kvásková focaccia &amp; jedlá miso svíčka</p>
+          <p class="dish">Hovězí tatarák s lanýžovým olejem na topince</p>
+        </div>
+        <div class="course">
+          <p class="label">Hlavní chod</p>
+          <p class="dish">Pomalu pečená vepřová krkovice, glazura z piva a medu, salsa z kadeřávku
+            <small>vege: pečená řepa se stejnou glazurou a vlašskými ořechy</small></p>
+          <p class="dish" style="margin-top:.5rem">Grilované brambory s miso posypkou</p>
+        </div>
+        <div class="course">
+          <p class="label">Dezerty</p>
+          <p class="dish">Zmrzlina — med, pivo, pampeliškový kořen</p>
+          <p class="dish">Grilované broskve, crumble, espuma, karamel</p>
+        </div>
+      </div>
+      <p class="menu-foot">Vaříme sezónně — menu se může v detailech proměnit.</p>
+    </div>
+  </section>
+
+  <!-- ======== NÁPOJE (zlatá → meruňková) ======== -->
+  <section class="s-drinks">
+    <div class="inner reveal">
+      <p class="meta" style="margin-bottom:1rem">Nápoje</p>
+      <h2>Ke každému chodu<br>padnoucí drink</h2>
+      <p class="lead">Welcome drink na přivítanou a párování k celému menu — pokaždé v alko i nealko verzi. Pivo, víno, koktejly. A když slunce sedne za obzor: tequila sunset.</p>
+    </div>
+  </section>
+
+  <!-- ======== MÍSTO (západ → soumrak) ======== -->
+  <section class="s-place on-dark">
+    <div class="inner reveal">
+      <div>
+        <p class="meta" style="margin-bottom:1rem">Místo</p>
+        <h2>Střecha Radost</h2>
+        <address class="addr">nám. Winstona Churchilla 2,<br>Praha 3 — Žižkov</address>
+        <a href="https://maps.app.goo.gl/" target="_blank" rel="noopener">Otevřít mapu ↗</a> <!-- EDIT: odkaz na mapu -->
+      </div>
+      <div class="photos">
+        <img src="vyhled-zapad.jpg" alt="Výhled ze Střechy Radost na Pražský hrad při západu slunce" loading="lazy" style="width:100%; height:auto; border-radius:4px">
+        <!-- EDIT: druhá fotka — atmosféra tabule/akce -->
+        <div class="photo-ph"><span>foto tabule</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== NOC ======== -->
+  <section class="s-night on-dark">
+    <div class="reveal">
+      <p class="meta" style="margin-bottom:1.4rem">DJs</p>
+      <h2>A až slunce zapadne?<br>Zůstaňte.</h2>
+      <p class="lead" style="margin-top:1.2rem">DJ jede dál, bar jede dál. Večeře končí, večer ne.</p>
+    </div>
+    <svg class="night-band" viewBox="0 0 1600 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <path d="M0 30 Q200 68 400 30 T800 30 T1200 30 T1600 30" fill="none" stroke="rgba(248,238,221,.4)" stroke-width="3"/>
+      <g stroke="rgba(248,238,221,.4)" stroke-width="2">
+        <line x1="200" y1="49" x2="200" y2="64"/><line x1="600" y1="49" x2="600" y2="64"/>
+        <line x1="1000" y1="49" x2="1000" y2="64"/><line x1="1400" y1="49" x2="1400" y2="64"/>
+      </g>
+      <g fill="#F7D492">
+        <circle cx="200" cy="72" r="8"/><circle cx="600" cy="72" r="8"/>
+        <circle cx="1000" cy="72" r="8"/><circle cx="1400" cy="72" r="8"/>
+      </g>
+      <g fill="rgba(248,238,221,.4)">
+        <rect x="0" y="132" width="1600" height="8"/>
+        <rect x="90" y="140" width="6" height="48"/><rect x="370" y="140" width="6" height="48"/>
+        <rect x="650" y="140" width="6" height="48"/><rect x="930" y="140" width="6" height="48"/>
+        <rect x="1210" y="140" width="6" height="48"/><rect x="1490" y="140" width="6" height="48"/>
+      </g>
+    </svg>
+  </section>
+</main>
+
+<footer>
+  <div class="logos">
+    <span class="logo-text">Radost</span>
+    <span class="x" aria-hidden="true">×</span>
+    <span class="logo-text">Bistro Karel</span>
+  </div>
+  <!-- EDIT: GoOut URL -->
+  <a class="btn" id="cta-footer" href="https://goout.net" target="_blank" rel="noopener">Vstupenky na GoOut</a>
+  <div class="social">
+    <!-- EDIT: IG odkazy -->
+    <a href="https://www.instagram.com/" target="_blank" rel="noopener">IG Střecha Radost</a>
+    <a href="https://www.instagram.com/bistro_karel/" target="_blank" rel="noopener">IG Bistro Karel</a>
+  </div>
+  <p class="copy">© 2026 Střecha Radost × Bistro Karel</p>
+</footer>
+
+<script>
+(function(){
+  var hero=document.getElementById('hero');
+  requestAnimationFrame(function(){hero.classList.add('in')});
+  var reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Parallax hero: slunce zapadá za věž, titulek jede pomaleji
+  if(!reduced){
+    var sun=document.getElementById('plSun');
+    var title=document.getElementById('plTitle');
+    var heroH=hero.offsetHeight;
+    addEventListener('resize',function(){heroH=hero.offsetHeight},{passive:true});
+    var ticking=false;
+    function frame(){
+      ticking=false;
+      var p=Math.min(Math.max(scrollY/heroH,0),1);
+      title.style.transform='translateY('+(p*20)+'vh)';
+      sun.style.transform='translateY('+(p*34)+'vh)';
+      sun.style.opacity=p<.7?1:Math.max(0,1-(p-.7)/.25);
+    }
+    addEventListener('scroll',function(){
+      if(!ticking){ticking=true; requestAnimationFrame(frame);}
+    },{passive:true});
+  }
+
+  // Reveal
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){e.target.classList.add('in'); io.unobserve(e.target);} });
+  },{threshold:.15});
+  document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+
+  // Analytika CTA — doplnit Plausible/GA4 (dodá klient)
+})();
+</script>
+</body>
+</html>
