@@ -3,10 +3,8 @@
    Všechno, co je před launchem potřeba doplnit, je označené EDIT.
    ===================================================================== */
 
-// EDIT: GoOut URL — dodá Pavel. Používá se v heru i ve footeru.
-//       Do launche zůstává rozcestník goout.net; promo nepouštět, dokud tu není
-//       přímý odkaz na událost.
-export const GOOUT_URL = 'https://goout.net/';
+// Přímý odkaz na událost. Používá se v heru i ve footeru.
+export const GOOUT_URL = 'https://goout.net/cs/sunset-dinner-party/szaxemy/';
 
 // EDIT: Google Maps odkaz na nám. Winstona Churchilla 2, Praha 3 — Žižkov
 export const MAP_URL = 'https://maps.app.goo.gl/';
